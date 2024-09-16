@@ -57,6 +57,8 @@ public class BaseballMenuItem {
      * @author 김현정
      */
     public void execute() {
-        functionInterface.execute();
+        if(functionInterface != null) {
+            functionInterface.execute();
+        }
     }
 }

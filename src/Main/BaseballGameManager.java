@@ -1,6 +1,6 @@
 package Main;
 
-import Common.BadInputException;
+import Common.InvalidTypeInputException;
 import Common.BaseballUtils;
 import ValueObject.BaseballMenuItem;
 
@@ -18,8 +18,12 @@ public class BaseballGameManager {
     private final int MIN_LEVEL = 3;
     private final int MAX_LEVEL = 5;
     private int currentLevel = MIN_LEVEL;
+
     private List<BaseballMenuItem> menuItems;
-    private Scanner sc;
+    private BaseballMenuItem currentBaseballMenu; // 현재 선택한 메뉴
+
+    private final Scanner sc;
+    private boolean isPlay = true;
 
     BaseballGameManager() {
         createMenuItems();
@@ -33,11 +37,11 @@ public class BaseballGameManager {
      */
     public void createMenuItems() {
         int id = 1;
-        int tempId = 0;
         int parentId = 0;
+        int tempId;
 
         menuItems = new ArrayList<>();
-        menuItems.add(new BaseballMenuItem(id, parentId, "숫자 야구 게임 플레이", null));
+        menuItems.add(new BaseballMenuItem(id, parentId, "숫자 야구 게임 플레이", this::selectMenu));
         tempId = parentId;
         parentId = id;
 
@@ -46,28 +50,45 @@ public class BaseballGameManager {
         parentId = tempId;
 
         menuItems.add(new BaseballMenuItem(++id, parentId, "기록 보기", this::printPlayLog));
-        menuItems.add(new BaseballMenuItem(++id, parentId, "종료", this::finish));
+        menuItems.add(new BaseballMenuItem(++id, parentId, "종료", this::exit));
     }
 
     /**
-     * 게임을 시작하고 메뉴를 선택합니다.
+     * 야구 게임을 실행합니다.
      *
      * @author 김현정
      */
     public void start() {
-        System.out.println("=== 숫자 야구 게임을 시작합니다. ===");
-        int menuId = selectMenu(0);
-        menuItems.get(menuId).execute(); // 각 메뉴와 연결된 함수 실행
+        while(isPlay)
+        {
+            System.out.println("=== 숫자 야구 게임 ===");
+            selectMenu();
+            if(isPlay) // 중간에 게임 중단하지 않았다면
+                requestContinueGame();
+        }
+        finish();
+    }
+
+    /**
+     * 메뉴를 선택합니다.
+     *
+     * @author 김현정
+     */
+    public void selectMenu() {
+        if (currentBaseballMenu == null) {
+            selectChildMenu(0);
+        } else {
+            selectChildMenu(currentBaseballMenu.getId());
+        }
     }
 
     /**
      * 메뉴를 출력하고 사용자로부터 메뉴를 선택받습니다.
      *
      * @param parentId 부모 메뉴의 ID
-     * @return 선택된 메뉴의 ID
      * @author 김현정
      */
-    public int selectMenu(int parentId) {
+    public void selectChildMenu(int parentId) {
         // 메뉴 출력
         List<BaseballMenuItem> items = menuItems.stream()
                 .filter(item -> item.getParentId() == parentId).toList();
@@ -75,26 +96,19 @@ public class BaseballGameManager {
             System.out.println(idx + 1 + ". " + items.get(idx).getName());
         }
 
-        String inputMsg = "메뉴를 선택해주세요. >> ";
         while (true) {
             try {
-                // 메뉴 선택
-                System.out.print(inputMsg);
-                int num = (int) BaseballUtils.parseNumber(sc.nextLine());
-                ;
-                if (BaseballUtils.isInRange(1, items.size(), num)) {
-                    // 하위 항목이 있는지 검색
-                    List<BaseballMenuItem> childItems = menuItems.stream()
-                            .filter(item -> item.getParentId() == num).toList();
-
-                    // 있다면 하위항목 메뉴를 선택한다.
-                    if (!childItems.isEmpty())
-                        selectMenu(num);
-                    else
-                        return num;
+                System.out.print("메뉴를 선택해주세요. >> ");
+                int menuId = (int) BaseballUtils.parseNumber(sc.nextLine());
+                if (BaseballUtils.isInRange(1, items.size(), menuId)) {
+                    currentBaseballMenu = items.get(menuId - 1);
+                    currentBaseballMenu.execute(); // 각 메뉴와 연결된 함수 실행
+                    break;
                 }
-            } catch (BadInputException ex) {
-                inputMsg = ex.getMessage();
+            } catch (InvalidTypeInputException ex) {
+                System.out.println(ex.getErrorMsg());
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
             }
         }
     }
@@ -109,7 +123,6 @@ public class BaseballGameManager {
         inputMsg.append("난이도를 선택해주세요.(");
         inputMsg.append(MIN_LEVEL);
         inputMsg.append("~");
-        inputMsg.append(MAX_LEVEL);
         inputMsg.append(MAX_LEVEL + ") >> ");
 
         while (true) {
@@ -118,17 +131,20 @@ public class BaseballGameManager {
                 int num = (int) BaseballUtils.parseNumber(sc.nextLine()); // 난이도 선택
                 if (BaseballUtils.isInRange(MIN_LEVEL, MAX_LEVEL, num)) {
                     currentLevel = num;
-                    play();
+                    break;
                 }
-            } catch (BadInputException ex) {
-                inputMsg.setLength(0);
-                inputMsg.append(ex.getMessage());
+            } catch (InvalidTypeInputException ex) {
+                System.out.println(ex.getErrorMsg());
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
             }
         }
+
+        play();
     }
 
     /**
-     * 숫자 야구 게임의 본격적인 플레이를 진행합니다.
+     * 숫자 야구 게임의 플레이를 진행합니다.
      *
      * @author 김현정
      */
@@ -146,23 +162,33 @@ public class BaseballGameManager {
     }
 
     /**
-     * 게임을 반복할지 여부를 사용자에게 묻고, 사용자의 입력에 따라 boolean 값을 반환합니다.
+     * 게임을 반복할지 여부를 사용자에게 묻는 함수
      *
-     * @return 게임을 반복할 경우 true, 종료할 경우 false를 반환합니다.
      * @author 김현정
      */
-    public boolean repeat() {
+    public void requestContinueGame() {
+        currentBaseballMenu = null;
         System.out.print("계속하시겠습니까? (exit 입력 시 종료) >> ");
-        return !sc.nextLine().equals("exit");
+        isPlay = !sc.nextLine().equals("exit");
     }
 
     /**
-     * 게임을 종료합니다.
+     * 게임을 종료 여부를 사용자에게 묻는 함수
+     *
+     * @author 김현정
+     */
+    public void exit() {
+        currentBaseballMenu = null;
+        System.out.print("종료하시겠습니까? (exit 입력 시 종료) >> ");
+        isPlay = !sc.nextLine().equals("exit");
+    }
+
+    /**
+     * 야구 게임 종료 메세지 출력.
      *
      * @author 김현정
      */
     public void finish() {
-        sc.close();
         System.out.println("=== 숫자 야구 게임을 종료합니다. ===");
     }
 }

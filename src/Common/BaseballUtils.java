@@ -3,7 +3,7 @@ package Common;
 import java.util.regex.Pattern;
 
 /**
- * 야구 게임에서 자주 사용되는 유틸리티 함수들을 제공하는 클래스입니다.
+ * 야구 게임에서 자주 사용되는 함수들을 제공하는 클래스입니다.
  * 숫자 검증, 랜덤 숫자 생성 등의 기능을 포함합니다.
  *
  * @author 김현정
@@ -16,14 +16,14 @@ public class BaseballUtils {
      *
      * @param strNum 검사할 문자열
      * @return 숫자로 변환된 값
-     * @throws BadInputException 입력된 문자열이 숫자가 아닐 경우 발생
+     * @throws InvalidTypeInputException 입력된 문자열이 숫자가 아닐 경우 발생
      * @author 김현정
      */
-    public static double parseNumber(String strNum) throws BadInputException {
+    public static double parseNumber(String strNum) throws InvalidTypeInputException {
         if (Pattern.matches(NUMBER_REG, strNum)) {
             return Double.parseDouble(strNum);
         } else {
-            throw new BadInputException("숫자");
+            throw new InvalidTypeInputException(strNum, "숫자", null);
         }
     }
 
@@ -45,11 +45,12 @@ public class BaseballUtils {
      * @param min 범위의 최솟값
      * @param max 범위의 최댓값
      * @param num 확인할 숫자
-     * @throws BadInputException 범위를 벗어난 숫자 입력시 발생
-     * @return num이 min 이상이고 max 이하이면 true, 아니면 false를 반환합니다.
+     * @return num이 min 이상이고 max 이하이면 true, 아니면 false 반환.
+     * @throws InvalidTypeInputException 범위를 벗어난 숫자 입력시 발생
+     * @author 김현정
      */
-    public static boolean isInRange(int min, int max, int num) throws BadInputException {
-        if(num >= min && num <= max)
+    public static boolean isInRange(int min, int max, int num) throws InvalidTypeInputException {
+        if (num >= min && num <= max)
             return true;
         else {
             StringBuilder sb = new StringBuilder();
@@ -59,7 +60,7 @@ public class BaseballUtils {
             sb.append(max);
             sb.append(")");
             sb.append("사이의 값");
-            throw new BadInputException(sb.toString());
+            throw new InvalidTypeInputException(num, sb.toString(), "잘못된 입력입니다! " + sb + "을 입력해주세요.");
         }
     }
 }
