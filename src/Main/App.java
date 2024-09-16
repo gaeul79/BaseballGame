@@ -2,6 +2,6 @@ package Main;
 
 public class App {
     public static void main(String[] args) {
-        new BaseballGameManager().start();
+        new BaseballManager().start();
     }
 }

@@ -1,5 +1,7 @@
 package ValueObject;
 
+import Interface.BaseballFunctionInterface;
+
 /**
  * 야구 메뉴 항목 클래스
  *

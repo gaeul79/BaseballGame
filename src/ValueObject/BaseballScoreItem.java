@@ -6,7 +6,7 @@ package ValueObject;
  *
  * @author 김현정
  */
-public class BaseballPlayCountItem {
+public class BaseballScoreItem {
     /**
      * 게임을 플레이한 횟수
      */

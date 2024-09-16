@@ -14,20 +14,19 @@ import java.util.Scanner;
  *
  * @author 김현정
  */
-public class BaseballGameManager {
-    private final int MIN_LEVEL = 3;
-    private final int MAX_LEVEL = 5;
-    private int currentLevel = MIN_LEVEL;
-
-    private List<BaseballMenuItem> menuItems;
-    private BaseballMenuItem currentBaseballMenu; // 현재 선택한 메뉴
-
+public class BaseballManager {
     private final Scanner sc;
     private boolean isPlay = true;
+    private List<BaseballMenuItem> menuItems;
+    private BaseballMenuItem currentBaseballMenu; // 현재 선택한 메뉴
+    private BaseballPlayManager baseballPlayManager;
+    private BaseballScoreManager baseballScoreManager;
 
-    BaseballGameManager() {
-        createMenuItems();
+    BaseballManager() {
         sc = new Scanner(System.in);
+        baseballPlayManager = new BaseballPlayManager();
+        baseballScoreManager = new BaseballScoreManager();
+        createMenuItems();
     }
 
     /**
@@ -119,28 +118,8 @@ public class BaseballGameManager {
      * @author 김현정
      */
     public void selectLevel() {
-        StringBuilder inputMsg = new StringBuilder();
-        inputMsg.append("난이도를 선택해주세요.(");
-        inputMsg.append(MIN_LEVEL);
-        inputMsg.append("~");
-        inputMsg.append(MAX_LEVEL + ") >> ");
-
-        while (true) {
-            System.out.println(inputMsg);
-            try {
-                int num = (int) BaseballUtils.parseNumber(sc.nextLine()); // 난이도 선택
-                if (BaseballUtils.isInRange(MIN_LEVEL, MAX_LEVEL, num)) {
-                    currentLevel = num;
-                    break;
-                }
-            } catch (InvalidTypeInputException ex) {
-                System.out.println(ex.getErrorMsg());
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
-            }
-        }
-
-        play();
+        baseballPlayManager.selectLevel();
+        baseballPlayManager.play();
     }
 
     /**
@@ -149,7 +128,7 @@ public class BaseballGameManager {
      * @author 김현정
      */
     public void play() {
-        System.out.println("게임을 시작합니다.");
+        baseballPlayManager.play();
     }
 
     /**
@@ -158,7 +137,7 @@ public class BaseballGameManager {
      * @author 김현정
      */
     public void printPlayLog() {
-        System.out.println("게임 기록을 출력합니다.");
+        baseballScoreManager.printPlayLog();
     }
 
     /**
