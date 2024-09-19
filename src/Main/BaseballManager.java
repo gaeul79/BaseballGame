@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 /**
  * 야구 게임을 관리하는 메인 클래스입니다.
- * 메뉴 생성, 선택, 게임 실행 등 게임의 전체적인 흐름을 담당합니다.
+ * 메뉴 생성, 선택과 같은 흐름을 담당합니다.
  *
  * @author 김현정
  */
@@ -46,6 +46,7 @@ public class BaseballManager {
 
         menuItems.add(new BaseballMenuItem(++id, parentId, "난이도 선택", this::selectLevel));
         menuItems.add(new BaseballMenuItem(++id, parentId, "야구 게임 플레이", this::play));
+        menuItems.add(new BaseballMenuItem(++id, parentId, "뒤로", this::back));
         parentId = tempId;
 
         menuItems.add(new BaseballMenuItem(++id, parentId, "기록 보기", this::printPlayLog));
@@ -58,11 +59,10 @@ public class BaseballManager {
      * @author 김현정
      */
     public void start() {
-        while(isPlay)
-        {
+        while (isPlay) {
             System.out.println("=== 숫자 야구 게임 ===");
             selectMenu();
-            if(isPlay) // 중간에 게임 중단하지 않았다면
+            if (isPlay) // 중간에 게임 중단하지 않았다면
                 requestContinueGame();
         }
         finish();
@@ -70,27 +70,48 @@ public class BaseballManager {
 
     /**
      * 메뉴를 선택합니다.
+     * 현재 메뉴의 자식 메뉴들을 가져와서 해당 메뉴들을 출력하고 사용자의 선택을 받습니다.
      *
      * @author 김현정
      */
     public void selectMenu() {
-        if (currentBaseballMenu == null) {
-            selectChildMenu(0);
-        } else {
-            selectChildMenu(currentBaseballMenu.getId());
-        }
+        selectMenu(getChildMenuItems(currentBaseballMenu));
+    }
+
+    /**
+     * 지정된 메뉴 항목의 부모 메뉴들을 반환합니다.
+     *
+     * @param menuItem 부모 메뉴를 찾을 대상 메뉴 항목
+     * @return 부모 메뉴들의 리스트
+     * @author 김현정
+     */
+    public List<BaseballMenuItem> getParentMenuItems(BaseballMenuItem menuItem) {
+        int parentId = menuItem != null ? menuItem.getParentId() : 0;
+        return menuItems.stream()
+                .filter(item -> item.getId() == parentId).toList();
+    }
+
+    /**
+     * 지정된 메뉴 항목의 자식 메뉴들을 반환합니다.
+     *
+     * @param menuItem 자식 메뉴를 찾을 대상 메뉴 항목
+     * @return 자식 메뉴들의 리스트
+     * @author 김현정
+     */
+    public List<BaseballMenuItem> getChildMenuItems(BaseballMenuItem menuItem) {
+        int id = menuItem != null ? menuItem.getId() : 0;
+        return menuItems.stream()
+                .filter(item -> item.getParentId() == id).toList();
     }
 
     /**
      * 메뉴를 출력하고 사용자로부터 메뉴를 선택받습니다.
      *
-     * @param parentId 부모 메뉴의 ID
+     * @param items 출력할 메뉴 항목들의 리스트
      * @author 김현정
      */
-    public void selectChildMenu(int parentId) {
+    public void selectMenu(List<BaseballMenuItem> items) {
         // 메뉴 출력
-        List<BaseballMenuItem> items = menuItems.stream()
-                .filter(item -> item.getParentId() == parentId).toList();
         for (int idx = 0; idx < items.size(); idx++) {
             System.out.println(idx + 1 + ". " + items.get(idx).getName());
         }
@@ -113,13 +134,22 @@ public class BaseballManager {
     }
 
     /**
+     * 현재 메뉴의 부모 메뉴로 이동합니다.
+     *
+     * @author 김현정
+     */
+    public void back() {
+        selectMenu(getParentMenuItems(currentBaseballMenu));
+    }
+
+    /**
      * 난이도를 선택합니다.
      *
      * @author 김현정
      */
     public void selectLevel() {
         baseballPlayManager.selectLevel();
-        baseballPlayManager.play();
+        play();
     }
 
     /**

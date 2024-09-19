@@ -7,7 +7,7 @@
         - 콘솔창을 통해 자리수`(3~5)`를 입력받아 난이도를 조정할 수 있다.
         - 자리수 입력시 게임 실행.
     - **야구 게임 진행**
-        - 난이도별로 `랜덤한 숫자`를 생성한다. 숫자는 모두 중복없이 다른 숫자이다.
+        - 난이도별로 `랜덤한 숫자`를 생성한다. 숫자는 모두 `중복없이` 다른 숫자이다.
         - 콘솔창을 통해 `(1~9)`사이의 세자리 숫자를 입력받는다.
         - 정답을 맞출때까지 각 시도에 대해 `스트라이크`와 `볼`의 개수를 출력하여 플레이어가 숫자를 맞출 수 있도록 유도한다.
         - 정답을 맞추면 축하 메세지를 띄워준다.
@@ -28,18 +28,21 @@
 | `Baseball_Source`                             | 숫자 야구 게임 프로젝트 |                
 | ├── `Common`                                  | 계산과 예외처리 관련된 파일들을 모아놓은 폴더 |
 | │   ├── `BaseballUtils.java`                  | 야구 게임에서 자주 사용되는 유틸리티 함수들을 제공하는 class |
-| │   ├── `BadInputException.java`              | 잘못된 입력이 발생했을 때 던지는 예외 class |
+| │   └── `BadInputException.java`              | 잘못된 입력이 발생했을 때 던지는 예외 class |
+| ├── `Interface`                               | 야구 게임에서 사용하는 인터페이스를 모은 폴더 |
+| │   └── `BaseballUtils.java`                  | 야구 게임 메뉴 항목 실행 시 수행될 기능을 정의하는 함수형 interface |
 | ├── `ValueObject`                             | 계산기에 사용되는 자원을 모아놓은 폴더 |
-| │   ├── `BaseballFunctionInterface.java`      | 야구 게임 메뉴 항목 실행 시 수행될 기능을 정의하는 함수형 인터페이스 |
 | │   ├── `BaseballMenuItem.java`               | 숫자 야구 게임 메뉴 정보를 담는 class |
-| │   ├── `BaseballPlayCountItem.java`          | 야구 게임의 한 번의 플레이에 대한 정보를 나타내는 class |
+| │   ├── `BaseballScoreItem.java`              | 야구 게임의 한 번의 플레이에 대한 정보를 나타내는 class |
 | │   └── `BaseballState.java`                  | 야구 게임 진행 상태 에 대한 Enum |
 | └── `Main`                                    | 야구 게임과 관련된 파일들을 모아놓은 폴더 |
-|     ├── `BaseballGameManager.java`            | 야구 게임을 관리하는 메인 class | 
+|     ├── `BaseballManager.java`                | 야구 게임을 관리하는 메인 class | 
+|     ├── `BaseballPlayManager.java`            | 야구 게임을 진행하는 class | 
+|     ├── `BaseballScoreManager.java`           | 야구 게임 기록을 관리하는 class | 
 |     └── `App.java`                            | 야구 게임 시작 함수가 있는 class |
 
 ### 🖥️개발환경
-- `윈도우 11`
+- `Window 11`
 - `JDK 1.8`
 
 ### 🔨개발 툴
