@@ -3,7 +3,6 @@ package Main;
 import Common.InvalidTypeInputException;
 import Common.NumberUtil;
 import ValueObject.BaseballMenuItem;
-import ValueObject.BaseballResultItem;
 
 import java.util.ArrayList;
 import java.util.List;

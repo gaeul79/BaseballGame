@@ -75,31 +75,23 @@ public class BaseballPlayManager {
         return resultItem;
     }
 
+    /**
+     * 난이도에 따라 랜덤한 숫자를 생성하여 리스트에 담아 반환한다.
+     *
+     * @return 랜덤한 숫자들로 구성된 리스트
+     * @author 김현정
+     */
     public List<Integer> createBaseballNumber() {
         List<Integer> baseballNumbers = new ArrayList<>();
-        baseballNumbers.add(3);
-        baseballNumbers.add(4);
-        baseballNumbers.add(5);
+        while (baseballNumbers.size() < currentLevel) {
+            int randomNumber = NumberUtil.randomNumber(1, 9);
+            boolean isSame = baseballNumbers.stream()
+                    .anyMatch(number -> number == randomNumber);
+            if (!isSame)
+                baseballNumbers.add(randomNumber);
+        }
         return baseballNumbers;
     }
-
-//    /**
-//     * 난이도에 따라 랜덤한 숫자를 생성하여 리스트에 담아 반환한다.
-//     *
-//     * @return 랜덤한 숫자들로 구성된 리스트
-//     * @author 김현정
-//     */
-//    public List<Integer> createBaseballNumber() {
-//        List<Integer> baseballNumbers = new ArrayList<>();
-//        while (baseballNumbers.size() < currentLevel) {
-//            int randomNumber = NumberUtil.randomNumber(1, 9);
-//            boolean isSame = baseballNumbers.stream()
-//                    .anyMatch(number -> number == randomNumber);
-//            if (!isSame)
-//                baseballNumbers.add(randomNumber);
-//        }
-//        return baseballNumbers;
-//    }
 
     /**
      * 사용자로부터 숫자 야구 게임에 맞는 입력값 (숫자 개수, 중복 없는 숫자)을 받는다.
@@ -134,11 +126,11 @@ public class BaseballPlayManager {
 
         int ball = 0;
         int strike = 0;
-        int out = 0;
+        int out;
 
         for (int baseballIdx = 0; baseballIdx < baseballNumbers.size(); baseballIdx++) {
             for (int inputIdx = 0; inputIdx < inputNumbers.size(); inputIdx++) {
-                if (baseballNumbers.get(baseballIdx) == inputNumbers.get(inputIdx)) {
+                if (baseballNumbers.get(baseballIdx).intValue() == inputNumbers.get(inputIdx).intValue()) {
                     if (baseballIdx == inputIdx) {
                         strike++;
                     } else {

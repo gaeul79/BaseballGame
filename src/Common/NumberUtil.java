@@ -72,7 +72,7 @@ public class NumberUtil {
      * @param min 범위의 최솟값
      * @param max 범위의 최댓값
      * @param num 확인할 숫자
-     * @return num이 min 이상이고 max 이하이면 true, 아니면 false 반환.
+     * @return num 값이 min 이상이고 max 이하이면 true, 아니면 false 반환.
      * @throws InvalidTypeInputException 범위를 벗어난 숫자 입력시 발생
      * @author 김현정
      */
