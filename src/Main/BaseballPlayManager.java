@@ -15,7 +15,7 @@ import java.util.Scanner;
  * @author 김현정
  */
 public class BaseballPlayManager {
-    private final int MIN_LEVEL = 3;
+    private final int MIN_LEVEL = 2;
     private final int MAX_LEVEL = 5;
     private int currentLevel = MIN_LEVEL;
     private int playCount = 1;
@@ -55,7 +55,7 @@ public class BaseballPlayManager {
      * @author 김현정
      */
     public BaseballResultItem play() {
-        System.out.println("=== 숫자 야구 게임을 시작합니다 ===");
+        System.out.println("<<<<< 숫자 야구 게임을 시작합니다 >>>>>");
         int count = 0;
         List<Integer> baseballNumbers = createBaseballNumber(); // 숫자 생성
 
@@ -157,7 +157,7 @@ public class BaseballPlayManager {
      */
     public void printGameResult(List<Integer> baseballNumbers, int count) {
         StringBuilder sb = new StringBuilder();
-        sb.append("=== 정답입니다! ===\n");
+        sb.append("<<<<<<<<<< 정답입니다!!!! >>>>>>>>>>\n");
         sb.append("[ 정답: ");
         for(Integer number : baseballNumbers) {
             sb.append(number);

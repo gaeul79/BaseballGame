@@ -3,6 +3,7 @@ package Main;
 import Common.InvalidTypeInputException;
 import Common.NumberUtil;
 import ValueObject.BaseballMenuItem;
+import ValueObject.BaseballResultItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,9 @@ import java.util.Scanner;
  */
 public class BaseballManager {
     private final Scanner sc;
-    private boolean isPlay = true;
+    private boolean isEnd = false;
+    private boolean ignoreEnterMsg = true;
+
     private List<BaseballMenuItem> menuItems;
     private BaseballMenuItem currentBaseballMenu; // 현재 선택한 메뉴
     private BaseballPlayManager baseballPlayManager;
@@ -59,11 +62,9 @@ public class BaseballManager {
      * @author 김현정
      */
     public void start() {
-        while (isPlay) {
+        while (!isEnd) {
             System.out.println("=== 숫자 야구 게임 ===");
             selectMenu(getMenuItems(currentBaseballMenu));
-            if(isPlay)
-                continueGame();
         }
         System.out.println("=== 숫자 야구 게임을 종료합니다. ===");
     }
@@ -89,9 +90,9 @@ public class BaseballManager {
      * @author 김현정
      */
     public List<BaseballMenuItem> getParentMenuItems(BaseballMenuItem menuItem) {
-        if(menuItem != null) {
-            for(BaseballMenuItem parentMenuItem : menuItems) {
-                if(parentMenuItem.getId() == menuItem.getParentId()) {
+        if (menuItem != null) {
+            for (BaseballMenuItem parentMenuItem : menuItems) {
+                if (parentMenuItem.getId() == menuItem.getParentId()) {
                     int parentId = parentMenuItem.getParentId();
                     return menuItems.stream()
                             .filter(item -> item.getParentId() == parentId).toList();
@@ -135,6 +136,7 @@ public class BaseballManager {
                 if (NumberUtil.isInRange(1, items.size(), menuId)) {
                     currentBaseballMenu = items.get(menuId - 1);
                     currentBaseballMenu.execute(); // 각 메뉴와 연결된 함수 실행
+                    pressEnterKey(); // 기능이 끝나면 Enter 키가 입력될때까지 대기한다.
                     break;
                 }
             } catch (InvalidTypeInputException ex) {
@@ -162,6 +164,18 @@ public class BaseballManager {
     }
 
     /**
+     * Enter 키를 입력받을때까지 대기한다.
+     *
+     * @author 김현정
+     */
+    public void pressEnterKey() {
+        if(ignoreEnterMsg && !isEnd) {
+            System.out.print("Enter 키를 누르면 메뉴로 돌아갑니다.");
+            sc.nextLine();
+        }
+    }
+
+    /**
      * 난이도를 선택합니다.
      *
      * @author 김현정
@@ -177,7 +191,10 @@ public class BaseballManager {
      * @author 김현정
      */
     public void play() {
-        baseballResultManager.addResultItem(baseballPlayManager.play());
+        do {
+            BaseballResultItem resultItem = baseballPlayManager.play();
+            baseballResultManager.addResultItem(resultItem);
+        } while (continueGame());
     }
 
     /**
@@ -192,11 +209,13 @@ public class BaseballManager {
     /**
      * 게임을 반복할지 여부를 사용자에게 묻는 함수
      *
+     * @return 게임을 계속할 경우 true, 종료할 경우 false 반환.
      * @author 김현정
      */
-    public void continueGame() {
-        System.out.print("계속하시겠습니까? (exit 입력 시 종료) >> ");
-        isPlay = !sc.nextLine().equals("exit");
+    public boolean continueGame() {
+        System.out.print("계속하시겠습니까? (exit 입력 시 메뉴로 돌아갑니다.) >> ");
+        ignoreEnterMsg = !sc.nextLine().equals("exit");
+        return ignoreEnterMsg;
     }
 
     /**
@@ -205,7 +224,7 @@ public class BaseballManager {
      * @author 김현정
      */
     public void exit() {
-        isPlay = false;
+        isEnd = true;
         currentBaseballMenu = null;
         baseballPlayManager = null;
         baseballResultManager = null;
