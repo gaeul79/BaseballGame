@@ -7,7 +7,7 @@ package Common;
  */
 public class InvalidTypeInputException extends Throwable {
 
-    private String errorMsg = "잘못된 입력입니다! 올바른 값을 읿력해주세요.";
+    private String errorMsg = "잘못된 입력입니다! 올바른 값을 입력해주세요.";
 
     public String getErrorMsg() {
         return errorMsg;

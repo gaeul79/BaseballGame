@@ -1,5 +1,7 @@
 package Common;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -8,7 +10,7 @@ import java.util.regex.Pattern;
  *
  * @author 김현정
  */
-public class BaseballUtils {
+public class NumberUtil {
     private static final String NUMBER_REG = "-?[0-9]*\\.?[0-9]*";
 
     /**
@@ -24,6 +26,31 @@ public class BaseballUtils {
             return Double.parseDouble(strNum);
         } else {
             throw new InvalidTypeInputException(strNum, "숫자", null);
+        }
+    }
+
+    /**
+     * 입력된 문자열이 숫자 야구 게임 규칙에 맞는 형식인지 검사합니다.
+     *
+     * @param strInputNum 입력받은 숫자 문자열
+     * @param level       숫자 야구 게임의 난이도 (숫자의 자릿수)
+     * @return 숫자 리스트
+     * @throws InvalidTypeInputException 입력된 문자열이 유효하지 않은 경우 발생
+     * @author 김현정
+     */
+    public static List<Integer> parseBaseballNumber(String strInputNum, int level) throws InvalidTypeInputException {
+        String correctValueMsg = level + "자리의 " + "1~9사이 숫자";
+        String baseballNumberReg = "[1-9]{" + level + "}";
+        if (!Pattern.matches(baseballNumberReg, strInputNum)) {
+            throw new InvalidTypeInputException(strInputNum, correctValueMsg, null);
+        }
+
+        int inputNum = Integer.parseInt(strInputNum);
+        List<Integer> inputNumbers = NumberUtil.ConvertIntToIntegerList(inputNum);
+        if (inputNumbers.size() != inputNumbers.stream().distinct().count()) {
+            throw new InvalidTypeInputException(strInputNum, correctValueMsg, "중복된 숫자가 있습니다.");
+        } else {
+            return inputNumbers;
         }
     }
 
@@ -62,5 +89,20 @@ public class BaseballUtils {
             sb.append("사이의 값");
             throw new InvalidTypeInputException(num, sb.toString(), "잘못된 입력입니다! " + sb + "을 입력해주세요.");
         }
+    }
+
+    /**
+     * 정수 값을 각 자리 숫자로 분리하여 리스트에 담아 반환하는 메소드입니다.
+     *
+     * @param number 분리할 정수 값
+     * @return 분리된 숫자들의 리스트 (Integer 타입)
+     * @author 김현정
+     */
+    public static List<Integer> ConvertIntToIntegerList(int number) {
+        int[] numbers = Integer.toString(number)
+                .chars()
+                .map(num -> Integer.parseInt(Character.toString(num)))
+                .toArray();
+        return Arrays.stream(numbers).boxed().toList();
     }
 }

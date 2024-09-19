@@ -1,12 +1,15 @@
 package Main;
 
-import Common.BaseballUtils;
+import Common.NumberUtil;
 import Common.InvalidTypeInputException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
  * 야구 게임을 진행하는 클래스
+ * 랜덤한 숫자를 맞추는 야구 게임을 진행한다.
  *
  * @author 김현정
  */
@@ -29,10 +32,10 @@ public class BaseballPlayManager {
         inputMsg.append(MAX_LEVEL + ") >> ");
 
         while (true) {
-            System.out.println(inputMsg);
+            System.out.print(inputMsg);
             try {
-                int num = (int) BaseballUtils.parseNumber(sc.nextLine()); // 난이도 선택
-                if (BaseballUtils.isInRange(MIN_LEVEL, MAX_LEVEL, num)) {
+                int num = (int) NumberUtil.parseNumber(sc.nextLine()); // 난이도 선택
+                if (NumberUtil.isInRange(MIN_LEVEL, MAX_LEVEL, num)) {
                     currentLevel = num;
                     break;
                 }
@@ -42,8 +45,6 @@ public class BaseballPlayManager {
                 System.out.println(ex.getMessage());
             }
         }
-
-        play();
     }
 
     /**
@@ -52,6 +53,118 @@ public class BaseballPlayManager {
      * @author 김현정
      */
     public void play() {
-        System.out.println("게임을 시작합니다.");
+        System.out.println("=== 숫자 야구 게임을 시작합니다 ===");
+        int count = 0;
+        List<Integer> baseballNumbers = createBaseballNumber(); // 숫자 생성
+
+        while (true) {
+            List<Integer> inputNumbers = inputBaseballNumber(); // 숫자 입력
+            count++;
+
+            if (checkNumber(baseballNumbers, inputNumbers)) { // 숫자 체크
+                printGameResult(baseballNumbers, count); // 맞췄을 시 문구 및 시도횟수 출력
+                break;
+            }
+        }
+    }
+
+//    public List<Integer> createBaseballNumber() {
+//        List<Integer> baseballNumbers = new ArrayList<>();
+//        baseballNumbers.add(3);
+//        baseballNumbers.add(4);
+//        baseballNumbers.add(5);
+//        return baseballNumbers;
+//    }
+
+    /**
+     * 난이도에 따라 랜덤한 숫자를 생성하여 리스트에 담아 반환한다.
+     *
+     * @return 랜덤한 숫자들로 구성된 리스트
+     * @author 김현정
+     */
+    public List<Integer> createBaseballNumber() {
+        List<Integer> baseballNumbers = new ArrayList<>();
+        while (baseballNumbers.size() < currentLevel) {
+            int randomNumber = NumberUtil.randomNumber(1, 9);
+            boolean isSame = baseballNumbers.stream()
+                    .anyMatch(number -> number == randomNumber);
+            if (!isSame)
+                baseballNumbers.add(randomNumber);
+        }
+        return baseballNumbers;
+    }
+
+    /**
+     * 사용자로부터 숫자 야구 게임에 맞는 입력값 (숫자 개수, 중복 없는 숫자)을 받는다.
+     *
+     * @return 사용자가 입력한 숫자들로 구성된 리스트
+     */
+    public List<Integer> inputBaseballNumber() {
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            System.out.print("숫자를 입력하세요. >> ");
+            try {
+                String inputMsg = sc.nextLine();
+                return NumberUtil.parseBaseballNumber(inputMsg, currentLevel);
+            } catch (InvalidTypeInputException ex) {
+                System.out.println(ex.getErrorMsg());
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+
+    /**
+     * 사용자가 입력한 숫자와 컴퓨터가 생성한 숫자를 비교하여 스트라이크, 볼, 아웃을 판정하는 메소드입니다.
+     *
+     * @param baseballNumbers 컴퓨터가 생성한 숫자들의 리스트
+     * @param inputNumbers 사용자가 입력한 숫자들의 리스트
+     * @return 사용자가 입력한 숫자와 컴퓨터가 생성한 숫자가 모두 일치하면 true, 그렇지 않으면 false를 반환합니다.
+     */
+    public boolean checkNumber(List<Integer> baseballNumbers, List<Integer> inputNumbers) {
+        if(inputNumbers == null)
+            return false;
+
+        int ball = 0;
+        int strike = 0;
+        int out = 0;
+
+        for (int baseballIdx = 0; baseballIdx < baseballNumbers.size(); baseballIdx++) {
+            for (int inputIdx = 0; inputIdx < inputNumbers.size(); inputIdx++) {
+                if (baseballNumbers.get(baseballIdx) == inputNumbers.get(inputIdx)) {
+                    if (baseballIdx == inputIdx) {
+                        strike++;
+                    } else {
+                        ball++;
+                    }
+                }
+            }
+        }
+
+        out = currentLevel - strike - ball;
+        StringBuilder sb = new StringBuilder();
+        sb.append("[ ").append(strike).append(" 스트라이크 ] ");
+        sb.append("[ ").append(ball).append(" 볼 ] ");
+        sb.append("[ ").append(out).append(" 아웃 ]");
+        System.out.println(sb);
+        return strike == currentLevel;
+    }
+
+    /**
+     * 게임 결과를 출력하는 메소드입니다.
+     *
+     * @param baseballNumbers 컴퓨터가 생성한 숫자들의 리스트
+     * @param count 시도 횟수
+     */
+    public void printGameResult(List<Integer> baseballNumbers, int count) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== 정답입니다! ===\n");
+        sb.append("[ 정답: ");
+        for(Integer number : baseballNumbers) {
+            sb.append(number);
+        }
+        sb.append(" ]");
+        sb.append("[ 시도횟수: ").append(count).append(" ]");
+        System.out.println(sb);
     }
 }
