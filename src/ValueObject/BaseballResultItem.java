@@ -6,7 +6,7 @@ package ValueObject;
  *
  * @author 김현정
  */
-public class BaseballScoreItem {
+public class BaseballResultItem {
     /**
      * 게임을 플레이한 횟수
      */
@@ -62,7 +62,7 @@ public class BaseballScoreItem {
      * @author 김현정
      */
     public void printGameLog() {
-        String sb = playCount + " 번째 게임 : 시도 횟수 - " + tryCount;
+        String sb = playCount + " 번째 게임: 시도 횟수 -> " + tryCount;
         System.out.println(sb);
     }
 }

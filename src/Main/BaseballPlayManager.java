@@ -2,6 +2,7 @@ package Main;
 
 import Common.NumberUtil;
 import Common.InvalidTypeInputException;
+import ValueObject.BaseballResultItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class BaseballPlayManager {
     private final int MIN_LEVEL = 3;
     private final int MAX_LEVEL = 5;
     private int currentLevel = MIN_LEVEL;
+    private int playCount = 1;
 
     /**
      * 난이도를 선택합니다.
@@ -52,7 +54,7 @@ public class BaseballPlayManager {
      *
      * @author 김현정
      */
-    public void play() {
+    public BaseballResultItem play() {
         System.out.println("=== 숫자 야구 게임을 시작합니다 ===");
         int count = 0;
         List<Integer> baseballNumbers = createBaseballNumber(); // 숫자 생성
@@ -66,33 +68,38 @@ public class BaseballPlayManager {
                 break;
             }
         }
+
+        BaseballResultItem resultItem = new BaseballResultItem();
+        resultItem.setPlayCount(playCount++);
+        resultItem.setTryCount(count);
+        return resultItem;
     }
 
-//    public List<Integer> createBaseballNumber() {
-//        List<Integer> baseballNumbers = new ArrayList<>();
-//        baseballNumbers.add(3);
-//        baseballNumbers.add(4);
-//        baseballNumbers.add(5);
-//        return baseballNumbers;
-//    }
-
-    /**
-     * 난이도에 따라 랜덤한 숫자를 생성하여 리스트에 담아 반환한다.
-     *
-     * @return 랜덤한 숫자들로 구성된 리스트
-     * @author 김현정
-     */
     public List<Integer> createBaseballNumber() {
         List<Integer> baseballNumbers = new ArrayList<>();
-        while (baseballNumbers.size() < currentLevel) {
-            int randomNumber = NumberUtil.randomNumber(1, 9);
-            boolean isSame = baseballNumbers.stream()
-                    .anyMatch(number -> number == randomNumber);
-            if (!isSame)
-                baseballNumbers.add(randomNumber);
-        }
+        baseballNumbers.add(3);
+        baseballNumbers.add(4);
+        baseballNumbers.add(5);
         return baseballNumbers;
     }
+
+//    /**
+//     * 난이도에 따라 랜덤한 숫자를 생성하여 리스트에 담아 반환한다.
+//     *
+//     * @return 랜덤한 숫자들로 구성된 리스트
+//     * @author 김현정
+//     */
+//    public List<Integer> createBaseballNumber() {
+//        List<Integer> baseballNumbers = new ArrayList<>();
+//        while (baseballNumbers.size() < currentLevel) {
+//            int randomNumber = NumberUtil.randomNumber(1, 9);
+//            boolean isSame = baseballNumbers.stream()
+//                    .anyMatch(number -> number == randomNumber);
+//            if (!isSame)
+//                baseballNumbers.add(randomNumber);
+//        }
+//        return baseballNumbers;
+//    }
 
     /**
      * 사용자로부터 숫자 야구 게임에 맞는 입력값 (숫자 개수, 중복 없는 숫자)을 받는다.
@@ -119,7 +126,7 @@ public class BaseballPlayManager {
      *
      * @param baseballNumbers 컴퓨터가 생성한 숫자들의 리스트
      * @param inputNumbers 사용자가 입력한 숫자들의 리스트
-     * @return 사용자가 입력한 숫자와 컴퓨터가 생성한 숫자가 모두 일치하면 true, 그렇지 않으면 false를 반환합니다.
+     * @return 사용자가 입력한 숫자와 컴퓨터가 생성한 숫자가 모두 일치하면 true, 그렇지 않으면 false 반환
      */
     public boolean checkNumber(List<Integer> baseballNumbers, List<Integer> inputNumbers) {
         if(inputNumbers == null)

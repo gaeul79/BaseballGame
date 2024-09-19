@@ -3,6 +3,7 @@ package Main;
 import Common.InvalidTypeInputException;
 import Common.NumberUtil;
 import ValueObject.BaseballMenuItem;
+import ValueObject.BaseballResultItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +21,12 @@ public class BaseballManager {
     private List<BaseballMenuItem> menuItems;
     private BaseballMenuItem currentBaseballMenu; // 현재 선택한 메뉴
     private BaseballPlayManager baseballPlayManager;
-    private BaseballScoreManager baseballScoreManager;
+    private BaseballResultManager baseballResultManager;
 
     BaseballManager() {
         sc = new Scanner(System.in);
         baseballPlayManager = new BaseballPlayManager();
-        baseballScoreManager = new BaseballScoreManager();
+        baseballResultManager = new BaseballResultManager();
         createMenuItems();
     }
 
@@ -177,7 +178,7 @@ public class BaseballManager {
      * @author 김현정
      */
     public void play() {
-        baseballPlayManager.play();
+        baseballResultManager.addResultItem(baseballPlayManager.play());
     }
 
     /**
@@ -186,7 +187,7 @@ public class BaseballManager {
      * @author 김현정
      */
     public void printPlayLog() {
-        baseballScoreManager.printPlayLog();
+        baseballResultManager.printPlayLog();
     }
 
     /**
@@ -208,6 +209,6 @@ public class BaseballManager {
         isPlay = false;
         currentBaseballMenu = null;
         baseballPlayManager = null;
-        baseballScoreManager = null;
+        baseballResultManager = null;
     }
 }
