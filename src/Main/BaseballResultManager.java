@@ -36,11 +36,11 @@ public class BaseballResultManager {
      * @author 김현정
      */
     public void printPlayLog() {
-        System.out.println("=== 게임 기록 보기 ===");
+        System.out.println("========= 게임 기록 보기 =========");
         if (baseballScoreItems.isEmpty())
             System.out.println("History is empty...");
         else
             baseballScoreItems.forEach(BaseballResultItem::printGameLog);
-        System.out.println("====================");
+        System.out.println("================================");
     }
 }

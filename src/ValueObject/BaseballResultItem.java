@@ -62,7 +62,10 @@ public class BaseballResultItem {
      * @author 김현정
      */
     public void printGameLog() {
-        String sb = playCount + " 번째 게임: 시도 횟수 -> " + tryCount;
+        StringBuilder sb = new StringBuilder();
+        sb.append("[ ").append(playCount);
+        sb.append(" 번째 게임 ] [ 시도 횟수: ");
+        sb.append(tryCount).append(" ]");
         System.out.println(sb);
     }
 }
