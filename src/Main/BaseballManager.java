@@ -19,9 +19,13 @@ public class BaseballManager {
     private final Scanner sc;
     private boolean isExit = false;
 
+    /** 메뉴 리스트 */
     private List<BaseballMenuItem> menuItems;
-    private BaseballMenuItem currentMenuItem; // 현재 선택한 메뉴
+    /** 현제 선택된 메뉴 */
+    private BaseballMenuItem currentMenuItem;
+    /** 게임 플레이를 관리하는 객체 */
     private BaseballPlayManager baseballPlayManager;
+    /** 게임 결과를 관리하는 객체 */
     private BaseballResultManager baseballResultManager;
 
     BaseballManager() {
@@ -63,6 +67,33 @@ public class BaseballManager {
     public void start() {
         while (!isExit) {
             selectMenu();
+        }
+    }
+
+    /**
+     * 메뉴를 출력하고 사용자로부터 메뉴를 선택받습니다.
+     *
+     * @author 김현정
+     */
+    public void selectMenu() {
+        List<BaseballMenuItem> menuItems = getMenuItems(); // 메뉴 출력
+        System.out.println("========= 숫자 야구 게임 =========");
+        for (int idx = 0; idx < menuItems.size(); idx++) {
+            System.out.println(idx + 1 + ". " + menuItems.get(idx).getName());
+        }
+
+        while (true) {
+            try {
+                System.out.print("메뉴를 선택해주세요. >> ");
+                int menuId = (int) NumberUtil.parseNumber(sc.nextLine());
+                if (NumberUtil.isInRange(1, menuItems.size(), menuId)) {
+                    currentMenuItem = menuItems.get(menuId - 1);
+                    currentMenuItem.execute(); // 각 메뉴와 연결된 함수 실행
+                    break;
+                }
+            } catch (InvalidTypeInputException ex) {
+                System.out.println(ex.getErrorMsg());
+            }
         }
     }
 
@@ -110,33 +141,6 @@ public class BaseballManager {
     }
 
     /**
-     * 메뉴를 출력하고 사용자로부터 메뉴를 선택받습니다.
-     *
-     * @author 김현정
-     */
-    public void selectMenu() {
-        List<BaseballMenuItem> menuItems = getMenuItems(); // 메뉴 출력
-        System.out.println("========= 숫자 야구 게임 =========");
-        for (int idx = 0; idx < menuItems.size(); idx++) {
-            System.out.println(idx + 1 + ". " + menuItems.get(idx).getName());
-        }
-
-        while (true) {
-            try {
-                System.out.print("메뉴를 선택해주세요. >> ");
-                int menuId = (int) NumberUtil.parseNumber(sc.nextLine());
-                if (NumberUtil.isInRange(1, menuItems.size(), menuId)) {
-                    currentMenuItem = menuItems.get(menuId - 1);
-                    currentMenuItem.execute(); // 각 메뉴와 연결된 함수 실행
-                    break;
-                }
-            } catch (InvalidTypeInputException ex) {
-                System.out.println(ex.getErrorMsg());
-            }
-        }
-    }
-
-    /**
      * 난이도를 선택합니다.
      *
      * @author 김현정
@@ -159,16 +163,6 @@ public class BaseballManager {
     }
 
     /**
-     * 지금까지 진행된 게임 기록을 출력합니다.
-     *
-     * @author 김현정
-     */
-    public void printPlayLog() {
-        baseballResultManager.printPlayLog();
-        pressEnterKey(); // Enter 키가 입력될때까지 대기한다.
-    }
-
-    /**
      * 게임을 반복할지 여부를 사용자에게 묻는 함수
      *
      * @return 게임을 계속할 경우 true, 종료할 경우 false 반환.
@@ -180,11 +174,21 @@ public class BaseballManager {
     }
 
     /**
+     * 지금까지 진행된 게임 기록을 출력합니다.
+     *
+     * @author 김현정
+     */
+    public void printPlayLog() {
+        baseballResultManager.printPlayLog();
+        waitPressEnterKey();
+    }
+
+    /**
      * Enter 키를 입력받을때까지 대기한다.
      *
      * @author 김현정
      */
-    public void pressEnterKey() {
+    public void waitPressEnterKey() {
         System.out.print("Enter 키를 누르면 메뉴로 돌아갑니다.");
         sc.nextLine();
     }

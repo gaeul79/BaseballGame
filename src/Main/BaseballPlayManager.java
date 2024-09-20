@@ -15,7 +15,7 @@ import java.util.Scanner;
  * @author 김현정
  */
 public class BaseballPlayManager {
-    private final int MIN_LEVEL = 2;
+    private final int MIN_LEVEL = 3;
     private final int MAX_LEVEL = 5;
     private int currentLevel = MIN_LEVEL;
     private int playCount = 1;
@@ -63,8 +63,8 @@ public class BaseballPlayManager {
             List<Integer> inputNumbers = inputBaseballNumber(); // 숫자 입력
             count++;
 
-            if (checkNumber(baseballNumbers, inputNumbers)) { // 숫자 체크
-                printGameResult(baseballNumbers, count); // 맞췄을 시 문구 및 시도횟수 출력
+            if (isStrike(baseballNumbers, inputNumbers)) { // 숫자 체크
+                printGameResult(baseballNumbers, count); // 맞췄을 시 문구 출력 및 시도 횟수 출력
                 break;
             }
         }
@@ -94,7 +94,7 @@ public class BaseballPlayManager {
     }
 
     /**
-     * 사용자로부터 숫자 야구 게임에 맞는 입력값 (숫자 개수, 중복 없는 숫자)을 받는다.
+     * 사용자로부터 숫자 야구 게임에 맞는 입력값을 받는다.
      *
      * @return 사용자가 입력한 숫자들로 구성된 리스트
      */
@@ -120,7 +120,7 @@ public class BaseballPlayManager {
      * @param inputNumbers 사용자가 입력한 숫자들의 리스트
      * @return 사용자가 입력한 숫자와 컴퓨터가 생성한 숫자가 모두 일치하면 true, 그렇지 않으면 false 반환
      */
-    public boolean checkNumber(List<Integer> baseballNumbers, List<Integer> inputNumbers) {
+    public boolean isStrike(List<Integer> baseballNumbers, List<Integer> inputNumbers) {
         if(inputNumbers == null)
             return false;
 
