@@ -24,14 +24,14 @@ public class BaseballManager {
     /** 현제 선택된 메뉴 */
     private BaseballMenuItem currentMenuItem;
     /** 게임 플레이를 관리하는 객체 */
-    private BaseballPlayManager baseballPlayManager;
+    private BaseballPlayManager playManager;
     /** 게임 결과를 관리하는 객체 */
-    private BaseballResultManager baseballResultManager;
+    private BaseballResultManager resultManager;
 
     BaseballManager() {
         sc = new Scanner(System.in);
-        baseballPlayManager = new BaseballPlayManager();
-        baseballResultManager = new BaseballResultManager();
+        playManager = new BaseballPlayManager();
+        resultManager = new BaseballResultManager();
         createMenuItems();
     }
 
@@ -146,7 +146,7 @@ public class BaseballManager {
      * @author 김현정
      */
     public void selectLevel() {
-        baseballPlayManager.selectLevel();
+        playManager.selectLevel();
         play();
     }
 
@@ -157,8 +157,8 @@ public class BaseballManager {
      */
     public void play() {
         do {
-            BaseballResultItem resultItem = baseballPlayManager.play();
-            baseballResultManager.addResultItem(resultItem);
+            BaseballResultItem resultItem = playManager.play();
+            resultManager.addResultItem(resultItem);
         } while (continueGame());
     }
 
@@ -179,7 +179,7 @@ public class BaseballManager {
      * @author 김현정
      */
     public void printPlayLog() {
-        baseballResultManager.printPlayLog();
+        resultManager.printPlayLog();
         waitPressEnterKey();
     }
 
