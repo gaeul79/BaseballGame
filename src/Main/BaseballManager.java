@@ -1,13 +1,13 @@
 package Main;
 
+import Common.InputHelper;
 import Common.InvalidTypeInputException;
 import Common.NumberUtil;
 import ValueObject.BaseballMenuItem;
-import ValueObject.BaseballResultItem;
+import ValueObject.BaseballRecordItem;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * 야구 게임을 관리하는 메인 클래스입니다.
@@ -16,7 +16,6 @@ import java.util.Scanner;
  * @author 김현정
  */
 public class BaseballManager {
-    private final Scanner sc;
     private boolean isExit = false;
 
     /** 메뉴 리스트 */
@@ -29,7 +28,6 @@ public class BaseballManager {
     private BaseballResultManager resultManager;
 
     BaseballManager() {
-        sc = new Scanner(System.in);
         playManager = new BaseballPlayManager();
         resultManager = new BaseballResultManager();
         createMenuItems();
@@ -55,7 +53,7 @@ public class BaseballManager {
         menuItems.add(new BaseballMenuItem(++id, parentId, "뒤로", this::setParentMenuItem));
         parentId = tempId;
 
-        menuItems.add(new BaseballMenuItem(++id, parentId, "기록 보기", this::printPlayLog));
+        menuItems.add(new BaseballMenuItem(++id, parentId, "기록 보기", this::printPlayRecord));
         menuItems.add(new BaseballMenuItem(++id, parentId, "종료", this::exit));
     }
 
@@ -84,8 +82,7 @@ public class BaseballManager {
 
         while (true) {
             try {
-                System.out.print("메뉴를 선택해주세요. >> ");
-                int menuId = (int) NumberUtil.parseNumber(sc.nextLine());
+                int menuId = InputHelper.inputNumber("메뉴를 선택해주세요. >> ");
                 if (NumberUtil.isInRange(1, menuItems.size(), menuId)) {
                     currentMenuItem = menuItems.get(menuId - 1);
                     currentMenuItem.execute(); // 각 메뉴와 연결된 함수 실행
@@ -157,8 +154,8 @@ public class BaseballManager {
      */
     public void play() {
         do {
-            BaseballResultItem resultItem = playManager.play();
-            resultManager.addResultItem(resultItem);
+            BaseballRecordItem resultItem = playManager.play();
+            resultManager.addGameRecord(resultItem);
         } while (continueGame());
     }
 
@@ -169,8 +166,7 @@ public class BaseballManager {
      * @author 김현정
      */
     public boolean continueGame() {
-        System.out.print("계속하시겠습니까? (exit 입력 시 메뉴로 돌아갑니다.) >> ");
-        return !sc.nextLine().equals("exit");
+        return !InputHelper.input("계속하시겠습니까? (exit 입력 시 메뉴로 돌아갑니다.) >> ").equals("exit");
     }
 
     /**
@@ -178,8 +174,8 @@ public class BaseballManager {
      *
      * @author 김현정
      */
-    public void printPlayLog() {
-        resultManager.printPlayLog();
+    public void printPlayRecord() {
+        resultManager.printGameRecords();
         waitPressEnterKey();
     }
 
@@ -189,8 +185,7 @@ public class BaseballManager {
      * @author 김현정
      */
     public void waitPressEnterKey() {
-        System.out.print("Enter 키를 누르면 메뉴로 돌아갑니다.");
-        sc.nextLine();
+        InputHelper.input("Enter 키를 누르면 메뉴로 돌아갑니다.");
     }
 
     /**

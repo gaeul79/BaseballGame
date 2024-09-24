@@ -1,8 +1,9 @@
 package Main;
 
+import Common.InputHelper;
 import Common.NumberUtil;
 import Common.InvalidTypeInputException;
-import ValueObject.BaseballResultItem;
+import ValueObject.BaseballRecordItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,6 @@ public class BaseballPlayManager {
      * @author 김현정
      */
     public void selectLevel() {
-        Scanner sc = new Scanner(System.in);
         StringBuilder inputMsg = new StringBuilder();
         inputMsg.append("난이도를 선택해주세요.(");
         inputMsg.append(MIN_LEVEL);
@@ -34,9 +34,8 @@ public class BaseballPlayManager {
         inputMsg.append(MAX_LEVEL + ") >> ");
 
         while (true) {
-            System.out.print(inputMsg);
             try {
-                int num = (int) NumberUtil.parseNumber(sc.nextLine()); // 난이도 선택
+                int num = InputHelper.inputNumber(inputMsg.toString()); // 난이도 선택
                 if (NumberUtil.isInRange(MIN_LEVEL, MAX_LEVEL, num)) {
                     currentLevel = num;
                     break;
@@ -54,7 +53,7 @@ public class BaseballPlayManager {
      *
      * @author 김현정
      */
-    public BaseballResultItem play() {
+    public BaseballRecordItem play() {
         System.out.println("<<<<< 숫자 야구 게임을 시작합니다 >>>>>");
         int count = 0;
         List<Integer> baseballNumbers = createBaseballNumber(); // 숫자 생성
@@ -69,7 +68,7 @@ public class BaseballPlayManager {
             }
         }
 
-        BaseballResultItem resultItem = new BaseballResultItem();
+        BaseballRecordItem resultItem = new BaseballRecordItem();
         resultItem.setPlayCount(playCount++);
         resultItem.setTryCount(count);
         return resultItem;
@@ -163,7 +162,7 @@ public class BaseballPlayManager {
             sb.append(number);
         }
         sb.append(" ]");
-        sb.append("[ 시도횟수: ").append(count).append(" ]");
+        sb.append("[ 시도 횟수: ").append(count).append(" ]");
         System.out.println(sb);
     }
 }

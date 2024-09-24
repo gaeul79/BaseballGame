@@ -1,6 +1,6 @@
 package Main;
 
-import ValueObject.BaseballResultItem;
+import ValueObject.BaseballRecordItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +14,10 @@ public class BaseballResultManager {
     /**
      * 게임 결과를 저장하는 리스트
      */
-    private List<BaseballResultItem> baseballScoreItems;
+    private List<BaseballRecordItem> baseballRecordItems;
 
     public BaseballResultManager() {
-        baseballScoreItems = new ArrayList<>();
+        baseballRecordItems = new ArrayList<>();
     }
 
     /**
@@ -26,8 +26,8 @@ public class BaseballResultManager {
      * @param item 추가할 게임 결과 항목
      * @author 김현정
      */
-    public void addResultItem(BaseballResultItem item) {
-        baseballScoreItems.add(item);
+    public void addGameRecord(BaseballRecordItem item) {
+        baseballRecordItems.add(item);
     }
 
     /**
@@ -35,12 +35,12 @@ public class BaseballResultManager {
      *
      * @author 김현정
      */
-    public void printPlayLog() {
+    public void printGameRecords() {
         System.out.println("========= 게임 기록 보기 =========");
-        if (baseballScoreItems.isEmpty())
+        if (baseballRecordItems.isEmpty())
             System.out.println("History is empty...");
         else
-            baseballScoreItems.forEach(BaseballResultItem::printGameLog);
+            baseballRecordItems.forEach(BaseballRecordItem::printGameRecord);
         System.out.println("================================");
     }
 }

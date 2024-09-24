@@ -21,27 +21,28 @@
     - 잘못된 입력에 대해 예외를 처리할 수 있어야한다.
 
 ### 🗂️숫자 야구 게임 구조
-| 폴더/파일명                                   | 설명                                         |                        
-| ----------------------------------------------|----------------------------------------------|
-| `BaseballGame`                                | 숫자 야구 게임 프로젝트 |
-| ├──`src`                                      | 숫자 야구 게임 소스 코드를 모아놓은 폴더 |                
-| │   ├── `Common`                              | 계산과 예외처리 관련된 파일들을 모아놓은 폴더 |
-| │   │    ├── `BaseballUtils.java`             | 야구 게임에서 자주 사용되는 유틸리티 함수들을 제공하는 class |
-| │   │    └── `BadInputException.java`         | 잘못된 입력이 발생했을 때 던지는 예외 class |
-| │   ├── `Interface`                           | 야구 게임에서 사용하는 인터페이스를 모은 폴더 |
-| │   │    └── `BaseballUtils.java`             | 야구 게임 메뉴 항목 실행 시 수행될 기능을 정의하는 함수형 interface |
-| │   ├── `ValueObject`                         | 계산기에 사용되는 자원을 모아놓은 폴더 |
-| │   │    ├── `BaseballMenuItem.java`          | 숫자 야구 게임 메뉴 정보를 담는 class |
-| │   │    ├── `BaseballScoreItem.java`         | 야구 게임의 한 번의 플레이에 대한 정보를 나타내는 class |
-| │   │    └── `BaseballState.java`             | 야구 게임 진행 상태 에 대한 Enum |
-| │   └── `Main`                                | 야구 게임과 관련된 파일들을 모아놓은 폴더 |
-| │        ├── `BaseballManager.java`           | 야구 게임을 관리하는 메인 class | 
-| │        ├── `BaseballPlayManager.java`       | 야구 게임을 진행하는 class | 
-| │        ├── `BaseballScoreManager.java`      | 야구 게임 기록을 관리하는 class | 
-| │        └── `App.java`                       | 야구 게임 시작 함수가 있는 class |
-| └──`Docs`                                     | 숫자 야구 게임 문서들을 모아놓은 폴더 |
-|     ├── `ClassDiagram.drawio`                 | 숫자 야구 게임 클래스 다이어그램 |
-|     └── `ReadMe.md`                           | 숫자 야구 게임에 대한 설명을 담은 파일 |
+| 폴더/파일명                                       | 설명                                     |                        
+|----------------------------------------------|------------------------------------------|
+| `BaseballGame`                               | 숫자 야구 게임 프로젝트 |
+| ├──`src`                                     | 숫자 야구 게임 소스 코드를 모아놓은 폴더 |                
+| │   ├── `Common`                             | 계산과 예외처리 관련된 파일들을 모아놓은 폴더 |
+| │   │    ├── `InputHelper.java`              | 사용자 입력을 받아 처리하는 유틸리티 class |
+| │   │    ├── `BaseballUtils.java`            | 야구 게임에서 자주 사용되는 유틸리티 함수들을 제공하는 class |
+| │   │    └── `BadInputException.java`        | 잘못된 입력이 발생했을 때 던지는 예외 class |
+| │   ├── `Interface`                          | 야구 게임에서 사용하는 인터페이스를 모은 폴더 |
+| │   │    └── `BaseballUtils.java`            | 야구 게임 메뉴 항목 실행 시 수행될 기능을 정의하는 함수형 interface |
+| │   ├── `ValueObject`                        | 계산기에 사용되는 자원을 모아놓은 폴더 |
+| │   │    ├── `BaseballMenuItem.java`         | 숫자 야구 게임 메뉴 정보를 담는 class |
+| │   │    ├── `BaseballScoreItem.java`        | 야구 게임의 한 번의 플레이에 대한 정보를 나타내는 class |
+| │   │    └── `BaseballState.java`            | 야구 게임 진행 상태 에 대한 Enum |
+| │   └── `Main`                               | 야구 게임과 관련된 파일들을 모아놓은 폴더 |
+| │        ├── `BaseballManager.java`          | 야구 게임을 관리하는 메인 class | 
+| │        ├── `BaseballPlayManager.java`      | 야구 게임을 진행하는 class | 
+| │        ├── `BaseballScoreManager.java`     | 야구 게임 기록을 관리하는 class | 
+| │        └── `App.java`                      | 야구 게임 시작 함수가 있는 class |
+| └──`Docs`                                    | 숫자 야구 게임 문서들을 모아놓은 폴더 |
+| ├── `ClassDiagram.drawio`                    | 숫자 야구 게임 클래스 다이어그램 |
+| └── `ReadMe.md`                              | 숫자 야구 게임에 대한 설명을 담은 파일 |
 
 
 ### 🖥️개발환경
